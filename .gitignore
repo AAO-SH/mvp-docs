@@ -1,0 +1,32 @@
+# Local/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Environment and secrets
+.env
+.env.*
+*.pem
+*.key
+*.secret
+
+# Node/build outputs
+node_modules/
+dist/
+build/
+coverage/
+.turbo/
+.vite/
+*.tsbuildinfo
+
+# Spec Kit / agent runtime internals not published in this docs repo
+.agents/
+.specify/
+AGENTS.md
+skills-lock.json
+
+# Local package-manager noise
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
