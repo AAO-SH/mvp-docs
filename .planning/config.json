@@ -1,0 +1,9 @@
+{
+  "project": "AAO Protocol",
+  "runtime": "codex",
+  "source": "gsd-ingest-docs",
+  "mode": "new",
+  "granularity": "standard",
+  "createdAt": "2026-05-23",
+  "docsCommit": false
+}

@@ -1,0 +1,13 @@
+{
+  "source_path": "specs/001-aao-protocol-core/quickstart.md",
+  "type": "DOC",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "Quickstart: AAO Protocol Core",
+  "summary": "Planned developer workflow and verification commands.",
+  "scope": ["quickstart", "test flow", "contract tests", "performance checks"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": null,
+  "notes": ""
+}

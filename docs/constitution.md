@@ -1,35 +1,28 @@
 <!--
 Sync Impact Report
-Version change: 1.0.0 -> 1.1.0
+Version change: 1.1.0 -> 1.1.1
 Modified principles:
-- I. Arquitetura Evidence-First: unchanged
-- II. Autonomia Governada por Politica: unchanged
-- III. Economia de Reputacao Verificavel: unchanged
-- IV. Governanca Hibrida Humano + IA: unchanged
+- I. Arquitetura Evidence-First: clarified validation-before-review ordering
+- IV. Governanca Hibrida Humano + IA: clarified review is triggered after
+  mechanical validation when needed
 - V. Liquidacao On-Chain, Dados Off-Chain: unchanged
+Modified sections:
+- Fluxo de Execucao e Quality Gates
 Added principles:
-- VI. Clean Code e Manutenibilidade Modular
-- VII. Clean Architecture e DDD
-- VIII. BDD, TDD e Padrao Jest
-- IX. Consistencia de Experiencia do Usuario
-- X. Performance como Contrato
+- None
 Added sections:
-- Qualidade de Engenharia e Delivery
+- None
 Removed sections:
 - None
 Templates requiring updates:
-- .specify/templates/plan-template.md: updated
-- .specify/templates/spec-template.md: updated
-- .specify/templates/tasks-template.md: updated
-- .specify/templates/checklist-template.md: updated
+- .specify/templates/plan-template.md: no change required
+- .specify/templates/spec-template.md: no change required
+- .specify/templates/tasks-template.md: no change required
+- .specify/templates/checklist-template.md: no change required
 - .specify/templates/commands/*.md: not present
-- AGENTS.md: updated
+- AGENTS.md: no change required
 Follow-up TODOs:
-- The mandatory before_constitution hook script failed to parse because of an
-  encoding issue in its success message, but the repository is already
-  initialized and has an initial commit.
-- No current specs/*/plan.md file exists yet, so there was no active plan to
-  reconcile with this amendment.
+- None
 -->
 # AAO Protocol Constitution
 
@@ -234,8 +227,15 @@ verificabilidade, privacidade e portabilidade dos artefatos.
 
 O fluxo normativo de execucao e: Task Proposal -> Policy -> Approval Check ->
 Task Assignment via P2P -> Executor Run Through Adapter -> Artifact Ref
-Produced -> Evidence Bundle Submitted -> Review quando exigido -> Validation ->
-Reputation Update -> Reward/Slashing -> DAO Token Settlement Record.
+Produced -> Evidence Bundle Submitted -> Validation -> Review quando exigido
+por politica ou validacao -> Reputation Update -> Reward/Slashing -> DAO Token
+Settlement Record.
+
+Validation DEVE ocorrer antes de Review para checar completude, identidade,
+artefatos, privacidade e conformidade mecanica com politica. Review somente
+ocorre quando a politica exigir julgamento humano/DAO ou quando Validation
+retornar `needs-review`. Aceitacao final exige ValidationResult aprovado e,
+quando aplicavel, ReviewOutcome aceito.
 
 Toda feature ou mudanca arquitetural DEVE identificar quais zonas afeta:
 runtime, adapter, P2P, registry, policy/governance, execution graph, workspace,
@@ -291,4 +291,4 @@ documentacao e releases DEVEM verificar aderencia aos principios evidence-first,
 policy-driven, reputacao verificavel, governanca hibrida, settlement on-chain,
 clean code, DDD, BDD/TDD, padrao Jest, UX consistente e performance medida.
 
-**Version**: 1.1.0 | **Ratified**: 2026-05-19 | **Last Amended**: 2026-05-19
+**Version**: 1.1.1 | **Ratified**: 2026-05-19 | **Last Amended**: 2026-05-21
