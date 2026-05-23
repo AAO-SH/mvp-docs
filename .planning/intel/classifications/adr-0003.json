@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/adr/0003-compensable-contributions-and-baseline-validation.md",
+  "type": "ADR",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "Compensable contributions and baseline validation",
+  "summary": "Only policy-authorized attributable contributions are paid; baseline node validation is not compensated by task settlement.",
+  "scope": ["budget allocation", "settlement lines", "baseline node validation"],
+  "cross_refs": [],
+  "locked": true,
+  "precedence": null,
+  "notes": ""
+}

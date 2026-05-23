@@ -1,0 +1,13 @@
+{
+  "source_path": "CONTEXT.md",
+  "type": "DOC",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "AAO Protocol",
+  "summary": "Canonical glossary and domain language for AAO Protocol.",
+  "scope": ["domain language", "glossary", "relationships", "ambiguities"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": null,
+  "notes": ""
+}

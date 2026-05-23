@@ -1,0 +1,13 @@
+{
+  "source_path": "specs/001-aao-protocol-core/contracts/mcp-tools.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "Contract: MCP Tools and Resources",
+  "summary": "MCP tool and resource contracts for external agent runtimes.",
+  "scope": ["MCP", "agent adapter", "tool contracts"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": null,
+  "notes": ""
+}

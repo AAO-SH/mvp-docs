@@ -1,0 +1,13 @@
+{
+  "source_path": "specs/001-aao-protocol-core/data-model.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": false,
+  "title": "Data Model: AAO Protocol Core",
+  "summary": "Bounded contexts, entities, state machine, and projections.",
+  "scope": ["domain model", "entities", "state machine", "projections"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": null,
+  "notes": ""
+}

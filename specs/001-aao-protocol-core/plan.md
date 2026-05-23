@@ -7,9 +7,13 @@
 ## Summary
 
 Build the first executable slice of AAO Protocol: a governed lifecycle for AI
-agent work across organization setup, agent handshake, task proposal, policy
-decision, assignment, evidence submission, review, reputation update, and
-settlement commitment. The implementation will be a strict TypeScript monorepo
+agent work across company setup, agent handshake, task proposal, preflight,
+quote, budget reservation, policy decision, assignment, evidence submission,
+assignment lease monitoring, evidence submission, review, dispute handling,
+independent dispute resolution, reputation update, settlement commitment, and
+modular Solana payment execution.
+The implementation will
+be a strict TypeScript monorepo
 using Clean Architecture and DDD, with protocol state persisted locally in
 SQLite, evidence artifacts addressed through IPFS, P2P propagation through
 libp2p, agent/runtime integration through MCP, DAO governance references through
@@ -44,16 +48,32 @@ operator web app, adapter packages, contract documentation, and tests.
 **Performance Goals**: 95% of valid task proposals receive policy decision plus
 assignment/rejection in under 30 seconds in controlled evaluation; UI state
 changes appear within 1 second after local node observes an event; evidence
-validation for standard bundles completes in under 5 seconds locally; P2P event
-deduplication keeps duplicate processing below 1% in test networks.
+validation for standard bundles completes in under 5 seconds locally; preflight
+checks complete without agent runtime execution; assignment lease expiry is
+observed and projected within 5 seconds locally; P2P event deduplication keeps
+duplicate processing below 1% in test networks; unauthorized signed lifecycle
+events are rejected or quarantined before projection in adversarial tests.
 
 **Constraints**: No sensitive company data on-chain. Domain rules remain
 framework-independent. Solana commitments occur only after accepted validation
 path. IPFS stores encrypted or privacy-safe artifacts where needed. Agents are
 untrusted by default. Runtime adapters must not bypass policy or evidence gates.
+Private artifact access requires scoped grants. Assignment leases prevent
+availability hijacking. Solana payment execution is modular and consumes the
+configured DAO payment interface by default for DAO-governed treasury flows.
+P2P signatures authenticate message transport, while Event Authority and Event
+Admission Rules authorize lifecycle effects.
+Disputes against reviewer decisions select conflict-free independent resolvers
+and grant only scoped evidence access.
+Blocking disputes require Dispute Bond, pre-reserved dispute-cost Budget
+Allocation, or DAO-governed waiver before they can pause final effects;
+private-company owners cannot waive this by default.
+Task-level compensation uses Budget Allocations and Settlement Lines for
+policy-authorized contributions; ordinary node validation is baseline network
+participation and is not paid from task settlement.
 
 **Scale/Scope**: Initial slice targets single-node and small test-network
-operation: up to 100 agents, 1,000 tasks per organization, 10,000 lifecycle
+operation: up to 100 agents, 1,000 tasks per company, 10,000 lifecycle
 events, and 1,000 evidence bundles in local evaluation.
 
 **AAO Zones Affected**: Runtime, Agent Adapter, P2P Network, Company Registry,
@@ -65,8 +85,8 @@ approval and review references integrate with Realms Today/SPL Governance.
 Private owner and hybrid partner/C-level/member rules are modeled in the policy
 engine.
 
-**Evidence Model**: Evidence bundles include task id, organization id,
-requester id, policy decision id, executor agent id, artifact refs, workspace
+**Evidence Model**: Evidence bundles include task id, company id,
+requester id, policy decision id, executor ref, artifact refs, workspace
 snapshot refs, logs/summaries, hashes/CIDs, validation result id, review refs
 when required, and settlement commitment refs when produced.
 
@@ -76,9 +96,9 @@ state, encrypted/private artifacts, indexes, manifests, snapshots, and detailed
 evidence records. Realms proposal/vote ids are referenced as governance inputs.
 
 **Bounded Contexts & Domain Model**: Company Registry, Agent Registry, Policy &
-Governance, Task Execution Graph, Evidence & Validation, Review, Reputation,
-Settlement, Workspace, Storage, Secure Node, P2P Propagation, Runtime Adapter,
-Operator UI.
+Governance, Task Execution Graph, Evidence & Validation, Review, Dispute,
+Reputation, Settlement, Payment, Market & Budgeting, Workspace, Storage, Secure
+Node, P2P Propagation, Runtime Adapter, Operator UI.
 
 **Architecture Pattern**: Clean Architecture. `domain` owns entities, value
 objects, domain events, invariants, and state machines. `application` owns use
@@ -91,15 +111,19 @@ Given/When/Then behavior tests, domain unit tests, adapter contract tests,
 integration tests for lifecycle paths, and targeted performance checks.
 
 **UX Consistency Requirements**: UI uses the same domain terms as specs and
-audit records. Task states are `proposed`, `blocked`, `approved`, `assigned`,
-`running`, `evidence-submitted`, `needs-review`, `validated`, `accepted`,
-`rejected`, `settlement-pending`, `settled`, `slashed`, and `failed`.
+audit records. Task states are `proposed`, `preflighted`, `blocked`,
+`approved`, `assigned`, `needs-clarification`, `needs-decomposition`,
+`quote-pending`, `budget-reserved`, `running`, `evidence-submitted`,
+`lease-expired`, `needs-review`, `validated`, `accepted`, `rejected`,
+`settlement-pending`, `settled`, `slashed`, and `failed`.
 
-**Performance Budgets**: Local policy decision p95 <500ms for standard tasks;
-standard evidence validation p95 <5s; UI lifecycle update p95 <1s after local
-event observation; SQLite query p95 <100ms for task list projections up to
-10,000 events; Solana commitment preparation p95 <2s before wallet/signing
-latency; P2P duplicate event rejection p95 <100ms.
+**Performance Budgets**: Local preflight and policy decision p95 <500ms for
+standard tasks without agent runtime execution; standard evidence validation p95
+<5s; UI lifecycle update p95 <1s after local event observation; SQLite query
+p95 <100ms for task list projections up to 10,000 events; Solana commitment
+preparation p95 <2s before wallet/signing latency; assignment lease expiry
+projection p95 <5s locally; P2P duplicate event rejection p95 <100ms;
+unauthorized event admission rejection/quarantine p95 <100ms locally.
 
 ## Constitution Check
 
@@ -108,17 +132,21 @@ latency; P2P duplicate event rejection p95 <100ms.
 - **Evidence-first execution**: PASS. Evidence bundle fields, artifact refs,
   validation results, review refs, and settlement commitments are part of the
   domain model and contracts.
-- **Policy-driven autonomy**: PASS. Every task proposal receives a policy
-  decision before assignment; autonomy, permission, review, and settlement rules
-  are explicit.
+- **Policy-driven autonomy**: PASS. Every task proposal receives preflight,
+  quote/budget handling when needed, and a policy decision before assignment;
+  autonomy, permission, review, and settlement rules are explicit.
 - **Verifiable reputation**: PASS. Reputation signals derive only from accepted
   validation/review/settlement events.
 - **Human + AI governance**: PASS. Public, private, and hybrid governance
-  authorities are modeled, including Realms references for DAO governance.
+  authorities are modeled, including Realms references for DAO governance and
+  independent resolver panels for disputes against reviewer decisions.
 - **On-chain settlement, off-chain privacy**: PASS. Solana records commitments;
-  SQLite/IPFS keep detailed and sensitive data off-chain.
+  SQLite/IPFS keep detailed and sensitive data off-chain. Solana payment
+  execution is adapter-based and does not move private evidence on-chain.
 - **Secure node boundaries**: PASS. Secure node environment is a bounded context
-  with identity, wallet, secrets, permissions, and signer ports.
+  with identity, wallet, secrets, permissions, artifact access grants, and
+  signer ports. P2P signatures authenticate peers, while Event Admission Rules
+  prevent unauthorized lifecycle events from changing state.
 - **Verification coverage**: PASS. BDD, Jest, contract, integration, and
   performance checks are required for lifecycle, adapter, storage, and Solana
   boundaries.
