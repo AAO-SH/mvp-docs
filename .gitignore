@@ -22,6 +22,8 @@ coverage/
 
 # Spec Kit / agent runtime internals not published in this docs repo
 .agents/
+.codex/
+.planning/
 .specify/
 AGENTS.md
 skills-lock.json
